@@ -1,19 +1,15 @@
-local ReAgdoll_Patch_CreateEntityRagdoll_Player_Ragdoll = NULL
+local Fully_Dynamic_Animated_Blood_Mod_Patch_Player_Ragdoll = nil
 
 local ORIGIN_OFFSET = 64
 local ANTI_CLIP_OFFSET = 4
 
-net.Receive("ReAgdoll_Patch_CreateEntityRagdoll_Player_Ragdoll_Index", function()
-    local index = net.ReadUInt(16)
-    local ragdoll = Entity(index)
-
-    if not IsValid(ragdoll) then return end
-
-    ReAgdoll_Patch_CreateEntityRagdoll_Player_Ragdoll = ragdoll
+net.Receive("Fully_Dynamic_Animated_Blood_Mod_Patch_Player_Ragdoll", function()
+    local ragdoll = net.ReadEntity()
+    Fully_Dynamic_Animated_Blood_Mod_Patch_Player_Ragdoll = ragdoll
 end)
 
 hook.Add("CalcView", "ReAgdoll_Patch_CalcView", function(ply, origin, angles, fov, znear, zfar)
-    local ragdoll = ReAgdoll_Patch_CreateEntityRagdoll_Player_Ragdoll
+    local ragdoll = Fully_Dynamic_Animated_Blood_Mod_Patch_Player_Ragdoll
     if not IsValid(ragdoll) then return end
     if not IsValid(ply) then return end
     if ply:Alive() then return end
@@ -39,10 +35,4 @@ hook.Add("CalcView", "ReAgdoll_Patch_CalcView", function(ply, origin, angles, fo
         drawviewer = false,
         ortho = nil,
     }
-end)
-
-hook.Add("PlayerSpawn", "ReAgdoll_Patch_PlayerSpawn", function(player, transition)
-    if transition then return end
-    if not IsValid(player) then return end
-    ReAgdoll_Patch_CreateEntityRagdoll_Player_Ragdoll = NULL
 end)
